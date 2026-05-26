@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Facebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .logo { font-size: 50px; margin-bottom: 10px; }
+        h1 { color: #333; margin-bottom: 10px; font-size: 24px; }
+        p { color: #666; margin-bottom: 30px; font-size: 14px; }
+        .fb-login-btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .fb-login-btn:hover { background: #166fe5; transform: translateY(-2px); }
+        .loading { display: none; margin-top: 20px; color: #666; }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1877f2;
+            border-radius: 50%;
+            width: 30px; height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🔐</div>
+        <h1>Welcome!</h1>
+        <p>Login with Facebook to continue</p>
+        
+        <button class="fb-login-btn" onclick="loginWithFacebook()">
+            ⓕ Login with Facebook
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Connecting...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSDqNlPqz7BdalZk27z7QXMxE62Izb6Lw",
+            authDomain: "myfirstproject-131a6.firebaseapp.com",
+            databaseURL: "https://myfirstproject-131a6-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "myfirstproject-131a6",
+            storageBucket: "myfirstproject-131a6.firebasestorage.app",
+            messagingSenderId: "736204308120",
+            appId: "1:736204308120:web:918c235834d8d0e9651aed"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // ⚠️ APNI FACEBOOK APP ID YAHAN DALO
+        const FACEBOOK_APP_ID = "YOUR_FACEBOOK_APP_ID";
+        
+        // ⚠️ GitHub Pages URL UPDATE KARO BAAD MEIN
+        const GITHUB_USERNAME = "YOUR_GITHUB_USERNAME";
+        const REDIRECT_URI = "https://" + GITHUB_USERNAME + ".github.io/fb-login/dashboard.html";
+
+        window.loginWithFacebook = function() {
+            document.getElementById('loading').style.display = 'block';
+            
+            const authUrl = "https://www.facebook.com/v21.0/dialog/oauth?" +
+                "client_id=" + FACEBOOK_APP_ID +
+                "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) +
+                "&response_type=token" +
+                "&scope=public_profile,email";
+            
+            window.location.href = authUrl;
+        };
+
+        if (sessionStorage.getItem('fb_user')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
